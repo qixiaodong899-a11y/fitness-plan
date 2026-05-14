@@ -185,16 +185,158 @@
             margin-right: 6px;
         }
 
-        .table-placeholder {
+        /* ===== 编辑模式表格 ===== */
+        .exercise-table .edit-input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-family: inherit;
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .exercise-table .edit-input:focus {
+            border-color: var(--accent);
+        }
+        .exercise-table .edit-input-sm {
+            max-width: 110px;
+        }
+        .exercise-table td.edit-cell {
+            padding: 6px 4px;
+        }
+        .exercise-table .row-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+        .exercise-table .row-del {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, color 0.15s;
+        }
+        .exercise-table .row-del:hover {
+            background: #fce8e6;
+            color: #d32f2f;
+        }
+
+        .empty-row td {
             text-align: center;
-            padding: 28px 0 12px;
             color: var(--text-secondary);
             font-size: 14px;
+            padding: 24px 8px;
         }
-        .table-placeholder .placeholder-icon {
-            font-size: 28px;
-            display: block;
-            margin-bottom: 8px;
+        .empty-row td::before {
+            content: '暂无训练项目，点击下方编辑添加 ✏️';
+        }
+
+        /* ===== 操作按钮 ===== */
+        .workout-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .workout-actions .btn {
+            font-family: inherit;
+            font-size: 14px;
+            padding: 8px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        .workout-actions .btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+        .workout-actions .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .workout-actions .btn-primary:hover {
+            background: var(--accent-dark);
+            border-color: var(--accent-dark);
+        }
+        .workout-actions .btn-success {
+            background: #9bc8a0;
+            color: #fff;
+            border-color: #9bc8a0;
+        }
+        .workout-actions .btn-success:hover {
+            background: #7db083;
+            border-color: #7db083;
+        }
+        .workout-actions .btn-danger {
+            color: #d32f2f;
+        }
+        .workout-actions .btn-danger:hover {
+            background: #fce8e6;
+            border-color: #d32f2f;
+        }
+        .workout-actions .btn-ghost {
+            border-color: transparent;
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        .workout-actions .btn-ghost:hover {
+            color: var(--text-primary);
+            background: var(--accent-dim);
+            border-color: var(--accent-dim);
+        }
+
+        .workout-actions .btn[style*="display:none"] {
+            display: none !important;
+        }
+
+        /* ===== Toast ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        .toast {
+            padding: 12px 28px;
+            border-radius: 14px;
+            background: var(--text-primary);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            animation: toast-in 0.25s ease, toast-out 0.25s ease 1.5s forwards;
+            font-family: inherit;
+        }
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes toast-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
 
         /* ===== 备注 ===== */
@@ -340,22 +482,19 @@
             <h2>胸 · Chest</h2>
             <span class="badge">Day 1</span>
         </div>
-        <div class="workout">
+        <div class="workout" data-key="chest">
             <div class="day-note">💡 推类主导日，配合肱三头肌辅助。</div>
             <table class="exercise-table">
                 <thead>
                     <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td class="ex-name">（示例）杠铃平板卧推</td><td>4 × 8-12</td><td>热身 2 组</td></tr>
-                    <tr><td class="ex-name">（示例）上斜哑铃卧推</td><td>4 × 10-12</td><td>—</td></tr>
-                    <tr><td class="ex-name">（示例）器械飞鸟夹胸</td><td>3 × 12-15</td><td>顶峰收缩</td></tr>
-                    <tr><td class="ex-name">（示例）双杠臂屈伸</td><td>3 × 力竭</td><td>下胸 &amp; 三头</td></tr>
-                </tbody>
+                <tbody></tbody>
             </table>
-            <div class="table-placeholder">
-                <span class="placeholder-icon">✏️</span>
-                在这里填写你的训练计划
+            <div class="workout-actions">
+                <button class="btn btn-primary btn-edit">✏️ 编辑</button>
+                <button class="btn btn-success btn-save" style="display:none">💾 保存</button>
+                <button class="btn btn-danger btn-cancel" style="display:none">取消</button>
+                <button class="btn btn-ghost btn-add" style="display:none">＋ 添加动作</button>
             </div>
             <div class="note">
                 <strong>📝 小贴士：</strong> 卧推时肩胛骨后收下沉，保持腕关节中立位。
@@ -370,22 +509,19 @@
             <h2>肩 · Shoulders</h2>
             <span class="badge">Day 2</span>
         </div>
-        <div class="workout">
+        <div class="workout" data-key="shoulders">
             <div class="day-note">💡 推拉结合，前中后束均衡发展。</div>
             <table class="exercise-table">
                 <thead>
                     <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td class="ex-name">（示例）哑铃坐姿推举</td><td>4 × 8-12</td><td>前束主导</td></tr>
-                    <tr><td class="ex-name">（示例）哑铃侧平举</td><td>4 × 12-15</td><td>中束 · 轻重量</td></tr>
-                    <tr><td class="ex-name">（示例）面拉</td><td>3 × 15-20</td><td>后束 · 绳索</td></tr>
-                    <tr><td class="ex-name">（示例）阿诺德推举</td><td>3 × 10-12</td><td>全束激活</td></tr>
-                </tbody>
+                <tbody></tbody>
             </table>
-            <div class="table-placeholder">
-                <span class="placeholder-icon">✏️</span>
-                在这里填写你的训练计划
+            <div class="workout-actions">
+                <button class="btn btn-primary btn-edit">✏️ 编辑</button>
+                <button class="btn btn-success btn-save" style="display:none">💾 保存</button>
+                <button class="btn btn-danger btn-cancel" style="display:none">取消</button>
+                <button class="btn btn-ghost btn-add" style="display:none">＋ 添加动作</button>
             </div>
             <div class="note">
                 <strong>📝 小贴士：</strong> 侧平举肘部微屈，想象用肘尖去够天花板，不要耸肩。
@@ -400,22 +536,19 @@
             <h2>背 · Back</h2>
             <span class="badge">Day 3</span>
         </div>
-        <div class="workout">
+        <div class="workout" data-key="back">
             <div class="day-note">💡 拉类主导日，配合肱二头肌辅助，注意背部发力感。</div>
             <table class="exercise-table">
                 <thead>
                     <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td class="ex-name">（示例）引体向上</td><td>4 × 力竭</td><td>宽距</td></tr>
-                    <tr><td class="ex-name">（示例）杠铃划船</td><td>4 × 8-12</td><td>俯身 45°</td></tr>
-                    <tr><td class="ex-name">（示例）高位下拉</td><td>3 × 10-12</td><td>对握</td></tr>
-                    <tr><td class="ex-name">（示例）坐姿绳索划船</td><td>3 × 12-15</td><td>夹背收缩</td></tr>
-                </tbody>
+                <tbody></tbody>
             </table>
-            <div class="table-placeholder">
-                <span class="placeholder-icon">✏️</span>
-                在这里填写你的训练计划
+            <div class="workout-actions">
+                <button class="btn btn-primary btn-edit">✏️ 编辑</button>
+                <button class="btn btn-success btn-save" style="display:none">💾 保存</button>
+                <button class="btn btn-danger btn-cancel" style="display:none">取消</button>
+                <button class="btn btn-ghost btn-add" style="display:none">＋ 添加动作</button>
             </div>
             <div class="note">
                 <strong>📝 小贴士：</strong> 划船时想象手只是钩子，用肘部向后带，背部主导发力。
@@ -430,22 +563,19 @@
             <h2>腿 · Legs</h2>
             <span class="badge">Day 4</span>
         </div>
-        <div class="workout">
+        <div class="workout" data-key="legs">
             <div class="day-note">💡 训练日强度最大，放在状态最好的那天。</div>
             <table class="exercise-table">
                 <thead>
                     <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
                 </thead>
-                <tbody>
-                    <tr><td class="ex-name">（示例）杠铃深蹲</td><td>4 × 6-10</td><td>核心收紧</td></tr>
-                    <tr><td class="ex-name">（示例）罗马尼亚硬拉</td><td>4 × 8-12</td><td>腘绳肌</td></tr>
-                    <tr><td class="ex-name">（示例）腿举</td><td>3 × 10-12</td><td>全幅度</td></tr>
-                    <tr><td class="ex-name">（示例）坐姿腿屈伸</td><td>3 × 12-15</td><td>股四头肌孤立</td></tr>
-                </tbody>
+                <tbody></tbody>
             </table>
-            <div class="table-placeholder">
-                <span class="placeholder-icon">✏️</span>
-                在这里填写你的训练计划
+            <div class="workout-actions">
+                <button class="btn btn-primary btn-edit">✏️ 编辑</button>
+                <button class="btn btn-success btn-save" style="display:none">💾 保存</button>
+                <button class="btn btn-danger btn-cancel" style="display:none">取消</button>
+                <button class="btn btn-ghost btn-add" style="display:none">＋ 添加动作</button>
             </div>
             <div class="note">
                 <strong>📝 小贴士：</strong> 深蹲前做好髋关节灵活度激活，膝盖轨迹对齐脚尖第二根趾头。
@@ -492,18 +622,18 @@
             <div class="contact-left">
                 <a class="contact-item" href="#">
                     <span class="icon">📱</span>
-                    <span>微信：<strong>QixiAoD-8888</strong><br><span class="hint">加好友备注「一起练」</span></span>
+                    <span>微信：<strong>fit_xiaoming</strong><br><span class="hint">加好友备注「一起练」</span></span>
                 </a>
                 <a class="contact-item" href="#">
                     <span class="icon">📧</span>
-                    <span>qixiaodong899@gmail.com<br><span class="hint">训练交流 / 组队约练</span></span>
+                    <span>xiaoming.fit@example.com<br><span class="hint">训练交流 / 组队约练</span></span>
                 </a>
                 <a class="contact-item" href="#">
                     <span class="icon">📷</span>
                     <span>小红书 / 抖音<br><span class="hint">@小明健身日记 · 每日打卡</span></span>
                 </a>
                 <div style="padding:12px 16px;border-radius:14px;background:var(--accent-light);font-size:14px;color:var(--text-secondary);">
-                    🎯 坐标：韩国 · 水源 &nbsp;|&nbsp; 健身房名称：亚洲大学校WHITE GYM
+                    🎯 坐标：北京 · 朝阳 &nbsp;|&nbsp; 常去：乐刻 / 超级猩猩
                 </div>
             </div>
             <div class="qr-area">
@@ -578,6 +708,216 @@
     </div>
 
 </div>
+
+<!-- Toast 容器 -->
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+(function () {
+    /* ===== 默认数据 ===== */
+    const DEFAULT = {
+        chest: [
+            { name: '杠铃平板卧推', sets: '4 × 8-12', note: '热身 2 组' },
+            { name: '上斜哑铃卧推', sets: '4 × 10-12', note: '' },
+            { name: '器械飞鸟夹胸', sets: '3 × 12-15', note: '顶峰收缩' },
+            { name: '双杠臂屈伸', sets: '3 × 力竭', note: '' },
+        ],
+        shoulders: [
+            { name: '哑铃坐姿推举', sets: '4 × 8-12', note: '前束主导' },
+            { name: '哑铃侧平举', sets: '4 × 12-15', note: '轻重量' },
+            { name: '面拉', sets: '3 × 15-20', note: '后束' },
+            { name: '阿诺德推举', sets: '3 × 10-12', note: '' },
+        ],
+        back: [
+            { name: '引体向上', sets: '4 × 力竭', note: '宽距' },
+            { name: '杠铃划船', sets: '4 × 8-12', note: '俯身 45°' },
+            { name: '高位下拉', sets: '3 × 10-12', note: '对握' },
+            { name: '坐姿绳索划船', sets: '3 × 12-15', note: '夹背收缩' },
+        ],
+        legs: [
+            { name: '杠铃深蹲', sets: '4 × 6-10', note: '核心收紧' },
+            { name: '罗马尼亚硬拉', sets: '4 × 8-12', note: '腘绳肌' },
+            { name: '腿举', sets: '3 × 10-12', note: '全幅度' },
+            { name: '坐姿腿屈伸', sets: '3 × 12-15', note: '' },
+        ],
+    };
+
+    const STORAGE_PREFIX = 'fitplan_';
+
+    function loadData (key) {
+        const raw = localStorage.getItem(STORAGE_PREFIX + key);
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed) && parsed.length) return parsed;
+            } catch (_) {}
+        }
+        return null;
+    }
+
+    function saveData (key, data) {
+        localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
+    }
+
+    function getData (key) {
+        return loadData(key) || DEFAULT[key] || [];
+    }
+
+    /* ===== Toast ===== */
+    function showToast (msg) {
+        const c = document.getElementById('toast-container');
+        const el = document.createElement('div');
+        el.className = 'toast';
+        el.textContent = msg;
+        c.appendChild(el);
+        setTimeout(function () { el.remove(); }, 2000);
+    }
+
+    /* ===== 渲染 ===== */
+    var editing = {};  // { chest: true, ... }
+
+    function renderAll () {
+        document.querySelectorAll('.workout[data-key]').forEach(function (el) {
+            var key = el.getAttribute('data-key');
+            renderTable(el, key);
+            updateButtons(el, key);
+        });
+    }
+
+    function renderTable (el, key) {
+        var tbody = el.querySelector('tbody');
+        var data = getData(key);
+        var isEdit = editing[key];
+
+        if (!data || data.length === 0) {
+            tbody.innerHTML = '<tr class="empty-row"><td colspan="3"></td></tr>';
+            return;
+        }
+
+        var html = '';
+        data.forEach(function (row, i) {
+            if (isEdit) {
+                html += '<tr>';
+                html += '<td class="edit-cell"><input class="edit-input" type="text" value="' + escAttr(row.name) + '" data-idx="' + i + '" data-field="name"></td>';
+                html += '<td class="edit-cell"><input class="edit-input edit-input-sm" type="text" value="' + escAttr(row.sets) + '" data-idx="' + i + '" data-field="sets"></td>';
+                html += '<td class="edit-cell" style="display:flex;align-items:center;gap:4px;justify-content:flex-end">';
+                html += '<input class="edit-input edit-input-sm" type="text" value="' + escAttr(row.note) + '" data-idx="' + i + '" data-field="note" style="flex:1;min-width:60px">';
+                html += '<button class="row-del" data-idx="' + i + '" title="删除">✕</button>';
+                html += '</td>';
+                html += '</tr>';
+            } else {
+                html += '<tr>';
+                html += '<td class="ex-name">' + escHtml(row.name) + '</td>';
+                html += '<td>' + escHtml(row.sets) + '</td>';
+                html += '<td>' + escHtml(row.note) + '</td>';
+                html += '</tr>';
+            }
+        });
+
+        tbody.innerHTML = html;
+
+        // 编辑模式：行删除 & input 自动保存
+        if (isEdit) {
+            tbody.querySelectorAll('.row-del').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var idx = parseInt(btn.getAttribute('data-idx'));
+                    var arr = getData(key);
+                    arr.splice(idx, 1);
+                    saveData(key, arr);
+                    renderTable(el, key);
+                    showToast('已删除');
+                });
+            });
+        }
+    }
+
+    function updateButtons (el, key) {
+        var isEdit = editing[key];
+        el.querySelector('.btn-edit').style.display = isEdit ? 'none' : '';
+        el.querySelector('.btn-save').style.display = isEdit ? '' : 'none';
+        el.querySelector('.btn-cancel').style.display = isEdit ? '' : 'none';
+        el.querySelector('.btn-add').style.display = isEdit ? '' : 'none';
+    }
+
+    /* ===== 从 DOM 读取当前输入数据 ===== */
+    function collectInputs (el) {
+        var tbody = el.querySelector('tbody');
+        var inputs = tbody.querySelectorAll('.edit-input');
+        var map = {};
+        var order = [];
+
+        inputs.forEach(function (inp) {
+            var idx = parseInt(inp.getAttribute('data-idx'));
+            var field = inp.getAttribute('data-field');
+            if (!map[idx]) { map[idx] = {}; order.push(idx); }
+            map[idx][field] = inp.value;
+        });
+
+        return order.map(function (idx) {
+            var row = map[idx];
+            return { name: row.name || '', sets: row.sets || '', note: row.note || '' };
+        }).filter(function (r) { return r.name.trim() !== ''; });
+    }
+
+    /* ===== 按钮绑定 ===== */
+    document.querySelectorAll('.workout[data-key]').forEach(function (el) {
+        var key = el.getAttribute('data-key');
+
+        el.querySelector('.btn-edit').addEventListener('click', function () {
+            editing[key] = true;
+            renderTable(el, key);
+            updateButtons(el, key);
+        });
+
+        el.querySelector('.btn-save').addEventListener('click', function () {
+            var data = collectInputs(el);
+            if (data.length === 0) {
+                showToast('至少填写一个动作名称');
+                return;
+            }
+            saveData(key, data);
+            editing[key] = false;
+            renderTable(el, key);
+            updateButtons(el, key);
+            showToast('✅ ' + el.querySelector('h2').textContent + ' 已保存');
+        });
+
+        el.querySelector('.btn-cancel').addEventListener('click', function () {
+            editing[key] = false;
+            renderTable(el, key);
+            updateButtons(el, key);
+        });
+
+        el.querySelector('.btn-add').addEventListener('click', function () {
+            var arr = getData(key);
+            arr.push({ name: '新动作', sets: '4 × 10', note: '' });
+            saveData(key, arr);
+            renderTable(el, key);
+            // 聚焦最后一个新增的 name 输入
+            var tbody = el.querySelector('tbody');
+            var inputs = tbody.querySelectorAll('.edit-input[data-field="name"]');
+            if (inputs.length) inputs[inputs.length - 1].focus();
+            showToast('已添加，填写完毕后点击保存');
+        });
+    });
+
+    /* ===== 工具函数 ===== */
+    function escHtml (s) {
+        if (!s) return '';
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    function escAttr (s) {
+        if (!s) return '';
+        return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    /* ===== 启动 ===== */
+    renderAll();
+})();
+</script>
 
 </body>
 </html>
