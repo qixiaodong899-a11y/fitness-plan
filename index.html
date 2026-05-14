@@ -360,8 +360,12 @@
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 32px 28px;
+            position: relative;
         }
         .contact-section .section-header { margin-bottom: 20px; }
+        .contact-section .section-header .btn {
+            margin-left: auto;
+        }
 
         .contact-grid {
             display: flex;
@@ -405,6 +409,39 @@
         .contact-item .hint {
             font-size: 12px;
             color: var(--text-secondary);
+        }
+        .contact-section .contact-edit-input {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 14px;
+            background: var(--card);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .contact-section .contact-edit-input:focus {
+            border-color: var(--accent);
+        }
+        .contact-section .contact-edit-row {
+            padding: 8px 16px;
+            border-radius: 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .contact-section .contact-edit-row .icon {
+            flex-shrink: 0;
+        }
+        .contact-section .contact-edit-row .fields {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .qr-area {
@@ -613,29 +650,16 @@
     </div>
 
     <!-- ========== 联系 & 二维码 ========== -->
-    <div class="contact-section">
+    <div class="contact-section" data-key="contact">
         <div class="section-header">
             <span class="emoji">🤝</span>
             <h2>一起练</h2>
+            <button class="btn btn-primary btn-edit">✏️ 编辑</button>
+            <button class="btn btn-success btn-save" style="display:none">💾 保存</button>
+            <button class="btn btn-danger btn-cancel" style="display:none">取消</button>
         </div>
         <div class="contact-grid">
-            <div class="contact-left">
-                <a class="contact-item" href="#">
-                    <span class="icon">📱</span>
-                    <span>微信：<strong>fit_xiaoming</strong><br><span class="hint">加好友备注「一起练」</span></span>
-                </a>
-                <a class="contact-item" href="#">
-                    <span class="icon">📧</span>
-                    <span>xiaoming.fit@example.com<br><span class="hint">训练交流 / 组队约练</span></span>
-                </a>
-                <a class="contact-item" href="#">
-                    <span class="icon">📷</span>
-                    <span>小红书 / 抖音<br><span class="hint">@小明健身日记 · 每日打卡</span></span>
-                </a>
-                <div style="padding:12px 16px;border-radius:14px;background:var(--accent-light);font-size:14px;color:var(--text-secondary);">
-                    🎯 坐标：北京 · 朝阳 &nbsp;|&nbsp; 常去：乐刻 / 超级猩猩
-                </div>
-            </div>
+            <div class="contact-left" id="contact-render"></div>
             <div class="qr-area">
                 <div class="qr-box">
                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -740,6 +764,15 @@
             { name: '腿举', sets: '3 × 10-12', note: '全幅度' },
             { name: '坐姿腿屈伸', sets: '3 × 12-15', note: '' },
         ],
+        contact: {
+            wechat: 'fit_xiaoming',
+            wechatNote: '加好友备注「一起练」',
+            email: 'xiaoming.fit@example.com',
+            emailNote: '训练交流 / 组队约练',
+            social: '@小明健身日记 · 每日打卡',
+            socialNote: '小红书 / 抖音',
+            location: '🎯 坐标：北京 · 朝阳 | 常去：乐刻 / 超级猩猩',
+        },
     };
 
     const STORAGE_PREFIX = 'fitplan_';
@@ -755,12 +788,27 @@
         return null;
     }
 
+    function loadObj (key) {
+        const raw = localStorage.getItem(STORAGE_PREFIX + key);
+        if (raw) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+            } catch (_) {}
+        }
+        return null;
+    }
+
     function saveData (key, data) {
         localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(data));
     }
 
     function getData (key) {
         return loadData(key) || DEFAULT[key] || [];
+    }
+
+    function getContact () {
+        return loadObj('contact') || DEFAULT.contact;
     }
 
     /* ===== Toast ===== */
@@ -774,7 +822,7 @@
     }
 
     /* ===== 渲染 ===== */
-    var editing = {};  // { chest: true, ... }
+    var editing = {};  // { chest: true, ..., contact: true }
 
     function renderAll () {
         document.querySelectorAll('.workout[data-key]').forEach(function (el) {
@@ -782,6 +830,60 @@
             renderTable(el, key);
             updateButtons(el, key);
         });
+        renderContact();
+    }
+
+    /* ===== 联系信息渲染 ===== */
+    function renderContact () {
+        var section = document.querySelector('.contact-section');
+        if (!section) return;
+        var data = getContact();
+        var isEdit = editing.contact;
+        var container = document.getElementById('contact-render');
+        var html = '';
+
+        if (isEdit) {
+            html += '<div class="contact-edit-row"><span class="icon" style="font-size:18px">📱</span><div class="fields">';
+            html += '<input class="contact-edit-input" type="text" value="' + escAttr(data.wechat) + '" data-field="wechat" placeholder="微信号">';
+            html += '<input class="contact-edit-input" type="text" value="' + escAttr(data.wechatNote) + '" data-field="wechatNote" placeholder="备注说明">';
+            html += '</div></div>';
+
+            html += '<div class="contact-edit-row"><span class="icon" style="font-size:18px">📧</span><div class="fields">';
+            html += '<input class="contact-edit-input" type="text" value="' + escAttr(data.email) + '" data-field="email" placeholder="邮箱">';
+            html += '<input class="contact-edit-input" type="text" value="' + escAttr(data.emailNote) + '" data-field="emailNote" placeholder="备注说明">';
+            html += '</div></div>';
+
+            html += '<div class="contact-edit-row"><span class="icon" style="font-size:18px">📷</span><div class="fields">';
+            html += '<input class="contact-edit-input" type="text" value="' + escAttr(data.social) + '" data-field="social" placeholder="社交账号">';
+            html += '<input class="contact-edit-input" type="text" value="' + escAttr(data.socialNote) + '" data-field="socialNote" placeholder="备注说明">';
+            html += '</div></div>';
+
+            html += '<div class="contact-edit-row"><span class="icon" style="font-size:18px">📍</span><div class="fields">';
+            html += '<input class="contact-edit-input" type="text" value="' + escAttr(data.location) + '" data-field="location" placeholder="坐标 / 常去场馆">';
+            html += '</div></div>';
+        } else {
+            html += '<a class="contact-item" href="#"><span class="icon">📱</span><span>微信：<strong>' + escHtml(data.wechat) + '</strong><br><span class="hint">' + escHtml(data.wechatNote) + '</span></span></a>';
+            html += '<a class="contact-item" href="#"><span class="icon">📧</span><span>' + escHtml(data.email) + '<br><span class="hint">' + escHtml(data.emailNote) + '</span></span></a>';
+            html += '<a class="contact-item" href="#"><span class="icon">📷</span><span>' + escHtml(data.socialNote) + '<br><span class="hint">' + escHtml(data.social) + '</span></span></a>';
+            html += '<div style="padding:12px 16px;border-radius:14px;background:var(--accent-light);font-size:14px;color:var(--text-secondary);">' + escHtml(data.location) + '</div>';
+        }
+
+        container.innerHTML = html;
+
+        // 更新按钮
+        section.querySelector('.btn-edit').style.display = isEdit ? 'none' : '';
+        section.querySelector('.btn-save').style.display = isEdit ? '' : 'none';
+        section.querySelector('.btn-cancel').style.display = isEdit ? '' : 'none';
+    }
+
+    function collectContactInputs () {
+        var container = document.getElementById('contact-render');
+        var inputs = container.querySelectorAll('.contact-edit-input');
+        var obj = {};
+        inputs.forEach(function (inp) {
+            obj[inp.getAttribute('data-field')] = inp.value;
+        });
+        return obj;
     }
 
     function renderTable (el, key) {
@@ -900,6 +1002,28 @@
             showToast('已添加，填写完毕后点击保存');
         });
     });
+
+    /* ===== 联系信息按钮绑定 ===== */
+    var contactSection = document.querySelector('.contact-section');
+    if (contactSection) {
+        contactSection.querySelector('.btn-edit').addEventListener('click', function () {
+            editing.contact = true;
+            renderContact();
+        });
+
+        contactSection.querySelector('.btn-save').addEventListener('click', function () {
+            var data = collectContactInputs();
+            saveData('contact', data);
+            editing.contact = false;
+            renderContact();
+            showToast('✅ 联系方式已保存');
+        });
+
+        contactSection.querySelector('.btn-cancel').addEventListener('click', function () {
+            editing.contact = false;
+            renderContact();
+        });
+    }
 
     /* ===== 工具函数 ===== */
     function escHtml (s) {
