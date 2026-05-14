@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一起练 · 健身计划</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf8f5;
+            --card: #ffffff;
+            --border: #eee8e0;
+            --text-primary: #3a3632;
+            --text-secondary: #9a9490;
+            --accent: #d4a88c;
+            --accent-light: #f5ede6;
+            --accent-dim: #f0e8e0;
+            --accent-dark: #b8896e;
+            --shadow: rgba(180, 160, 140, 0.10);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== 顶部装饰条 ===== */
+        body::before {
+            content: '';
+            display: block;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-dark), var(--accent), var(--accent-dark));
+            background-size: 200% 100%;
+            animation: shimmer 6s ease-in-out infinite;
+        }
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+
+        /* ===== 头部 ===== */
+        .hero {
+            text-align: center;
+            margin-bottom: 44px;
+        }
+        .hero .icon-big {
+            font-size: 56px;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .hero h1 {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .hero .sub {
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        .hero .sub span {
+            display: inline-block;
+            margin: 0 4px;
+            padding: 2px 12px;
+            background: var(--accent-light);
+            border-radius: 12px;
+            color: var(--accent-dark);
+            font-weight: 500;
+        }
+
+        /* ===== 标签 ===== */
+        .tags {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0 44px;
+        }
+        .tags span {
+            font-size: 14px;
+            padding: 6px 18px;
+            border-radius: 999px;
+            background: var(--accent-dim);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .tags .highlight {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        /* ===== 模块标题 ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .section-header .emoji {
+            font-size: 24px;
+        }
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .section-header .badge {
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 999px;
+            background: var(--accent-light);
+            color: var(--accent-dark);
+            font-weight: 500;
+        }
+
+        /* ===== 训练模块 ===== */
+        .workout {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 28px 24px;
+            margin-bottom: 24px;
+            transition: box-shadow 0.2s;
+        }
+        .workout:hover {
+            box-shadow: 0 4px 24px var(--shadow);
+        }
+
+        .workout .day-note {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        /* ===== 训练项表格 ===== */
+        .exercise-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .exercise-table th {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            text-align: left;
+            padding: 0 8px 10px 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .exercise-table th:last-child { text-align: right; }
+        .exercise-table td {
+            padding: 10px 8px;
+            font-size: 15px;
+            border-bottom: 1px solid var(--accent-dim);
+            vertical-align: middle;
+        }
+        .exercise-table td:last-child {
+            text-align: right;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .exercise-table tr:last-child td { border-bottom: none; }
+
+        .exercise-table .ex-name {
+            font-weight: 500;
+        }
+        .exercise-table .ex-name::before {
+            content: '·';
+            color: var(--accent);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        .table-placeholder {
+            text-align: center;
+            padding: 28px 0 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .table-placeholder .placeholder-icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* ===== 备注 ===== */
+        .workout .note {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: var(--accent-light);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .workout .note strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ===== 联系 & 二维码 ===== */
+        .contact-section {
+            margin-top: 48px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px 28px;
+        }
+        .contact-section .section-header { margin-bottom: 20px; }
+
+        .contact-grid {
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+        }
+        .contact-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .contact-item:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+        .contact-item .icon {
+            font-size: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .contact-item .hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .qr-area {
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .qr-box {
+            width: 140px;
+            height: 140px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+        .qr-box svg {
+            width: 100%;
+            height: 100%;
+        }
+        .qr-area .qr-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 640px) {
+            .container { padding: 24px 16px 40px; }
+            .hero h1 { font-size: 24px; }
+            .workout { padding: 20px 16px 18px; }
+            .contact-grid { flex-direction: column; }
+            .qr-area { align-self: center; }
+            .exercise-table th:nth-child(3),
+            .exercise-table td:nth-child(3) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ========== 头部 ========== -->
+    <div class="hero">
+        <span class="icon-big">💪</span>
+        <h1>一起练 · 四分化训练</h1>
+        <p class="sub">
+            <span>胸</span> · <span>肩</span> · <span>背</span> · <span>腿</span>
+            &nbsp;&nbsp;|&nbsp;&nbsp; 每周 4 练 · 循序渐进
+        </p>
+    </div>
+
+    <div class="tags">
+        <span class="highlight">🏋️ 新手友好</span>
+        <span>📋 可自行调整</span>
+        <span>⏱ 约 60min</span>
+        <span>📈 渐进超负荷</span>
+    </div>
+
+    <!-- ========== 胸 ========== -->
+    <div>
+        <div class="section-header">
+            <span class="emoji">🔥</span>
+            <h2>胸 · Chest</h2>
+            <span class="badge">Day 1</span>
+        </div>
+        <div class="workout">
+            <div class="day-note">💡 推类主导日，配合肱三头肌辅助。</div>
+            <table class="exercise-table">
+                <thead>
+                    <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="ex-name">（示例）杠铃平板卧推</td><td>4 × 8-12</td><td>热身 2 组</td></tr>
+                    <tr><td class="ex-name">（示例）上斜哑铃卧推</td><td>4 × 10-12</td><td>—</td></tr>
+                    <tr><td class="ex-name">（示例）器械飞鸟夹胸</td><td>3 × 12-15</td><td>顶峰收缩</td></tr>
+                    <tr><td class="ex-name">（示例）双杠臂屈伸</td><td>3 × 力竭</td><td>下胸 &amp; 三头</td></tr>
+                </tbody>
+            </table>
+            <div class="table-placeholder">
+                <span class="placeholder-icon">✏️</span>
+                在这里填写你的训练计划
+            </div>
+            <div class="note">
+                <strong>📝 小贴士：</strong> 卧推时肩胛骨后收下沉，保持腕关节中立位。
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 肩 ========== -->
+    <div>
+        <div class="section-header">
+            <span class="emoji">🏔️</span>
+            <h2>肩 · Shoulders</h2>
+            <span class="badge">Day 2</span>
+        </div>
+        <div class="workout">
+            <div class="day-note">💡 推拉结合，前中后束均衡发展。</div>
+            <table class="exercise-table">
+                <thead>
+                    <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="ex-name">（示例）哑铃坐姿推举</td><td>4 × 8-12</td><td>前束主导</td></tr>
+                    <tr><td class="ex-name">（示例）哑铃侧平举</td><td>4 × 12-15</td><td>中束 · 轻重量</td></tr>
+                    <tr><td class="ex-name">（示例）面拉</td><td>3 × 15-20</td><td>后束 · 绳索</td></tr>
+                    <tr><td class="ex-name">（示例）阿诺德推举</td><td>3 × 10-12</td><td>全束激活</td></tr>
+                </tbody>
+            </table>
+            <div class="table-placeholder">
+                <span class="placeholder-icon">✏️</span>
+                在这里填写你的训练计划
+            </div>
+            <div class="note">
+                <strong>📝 小贴士：</strong> 侧平举肘部微屈，想象用肘尖去够天花板，不要耸肩。
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 背 ========== -->
+    <div>
+        <div class="section-header">
+            <span class="emoji">🦅</span>
+            <h2>背 · Back</h2>
+            <span class="badge">Day 3</span>
+        </div>
+        <div class="workout">
+            <div class="day-note">💡 拉类主导日，配合肱二头肌辅助，注意背部发力感。</div>
+            <table class="exercise-table">
+                <thead>
+                    <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="ex-name">（示例）引体向上</td><td>4 × 力竭</td><td>宽距</td></tr>
+                    <tr><td class="ex-name">（示例）杠铃划船</td><td>4 × 8-12</td><td>俯身 45°</td></tr>
+                    <tr><td class="ex-name">（示例）高位下拉</td><td>3 × 10-12</td><td>对握</td></tr>
+                    <tr><td class="ex-name">（示例）坐姿绳索划船</td><td>3 × 12-15</td><td>夹背收缩</td></tr>
+                </tbody>
+            </table>
+            <div class="table-placeholder">
+                <span class="placeholder-icon">✏️</span>
+                在这里填写你的训练计划
+            </div>
+            <div class="note">
+                <strong>📝 小贴士：</strong> 划船时想象手只是钩子，用肘部向后带，背部主导发力。
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 腿 ========== -->
+    <div>
+        <div class="section-header">
+            <span class="emoji">🦵</span>
+            <h2>腿 · Legs</h2>
+            <span class="badge">Day 4</span>
+        </div>
+        <div class="workout">
+            <div class="day-note">💡 训练日强度最大，放在状态最好的那天。</div>
+            <table class="exercise-table">
+                <thead>
+                    <tr><th>动作</th><th>组 × 次</th><th>备注</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="ex-name">（示例）杠铃深蹲</td><td>4 × 6-10</td><td>核心收紧</td></tr>
+                    <tr><td class="ex-name">（示例）罗马尼亚硬拉</td><td>4 × 8-12</td><td>腘绳肌</td></tr>
+                    <tr><td class="ex-name">（示例）腿举</td><td>3 × 10-12</td><td>全幅度</td></tr>
+                    <tr><td class="ex-name">（示例）坐姿腿屈伸</td><td>3 × 12-15</td><td>股四头肌孤立</td></tr>
+                </tbody>
+            </table>
+            <div class="table-placeholder">
+                <span class="placeholder-icon">✏️</span>
+                在这里填写你的训练计划
+            </div>
+            <div class="note">
+                <strong>📝 小贴士：</strong> 深蹲前做好髋关节灵活度激活，膝盖轨迹对齐脚尖第二根趾头。
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 周计划一览 ========== -->
+    <div class="workout" style="margin-top:8px;">
+        <div class="section-header" style="margin-bottom:10px;">
+            <span class="emoji">📅</span>
+            <h2>周计划一览</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;">
+            <div style="padding:12px;border-radius:12px;background:var(--accent-light);">
+                <div style="font-weight:600;font-size:15px;">周一</div>
+                <div style="font-size:13px;color:var(--text-secondary);">🔥 胸</div>
+            </div>
+            <div style="padding:12px;border-radius:12px;background:var(--accent-light);">
+                <div style="font-weight:600;font-size:15px;">周二</div>
+                <div style="font-size:13px;color:var(--text-secondary);">🏔️ 肩</div>
+            </div>
+            <div style="padding:12px;border-radius:12px;background:var(--accent-light);">
+                <div style="font-weight:600;font-size:15px;">周四</div>
+                <div style="font-size:13px;color:var(--text-secondary);">🦅 背</div>
+            </div>
+            <div style="padding:12px;border-radius:12px;background:var(--accent-light);">
+                <div style="font-weight:600;font-size:15px;">周五</div>
+                <div style="font-size:13px;color:var(--text-secondary);">🦵 腿</div>
+            </div>
+        </div>
+        <div style="margin-top:12px;font-size:13px;color:var(--text-secondary);text-align:center;">
+            周三 / 周六 / 周日 &nbsp;·&nbsp; 休息或低强度有氧 🚶
+        </div>
+    </div>
+
+    <!-- ========== 联系 & 二维码 ========== -->
+    <div class="contact-section">
+        <div class="section-header">
+            <span class="emoji">🤝</span>
+            <h2>一起练</h2>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-left">
+                <a class="contact-item" href="#">
+                    <span class="icon">📱</span>
+                    <span>微信：<strong>QixiAoD-8888</strong><br><span class="hint">加好友备注「一起练」</span></span>
+                </a>
+                <a class="contact-item" href="#">
+                    <span class="icon">📧</span>
+                    <span>qixiaodong899@gmail.com<br><span class="hint">训练交流 / 组队约练</span></span>
+                </a>
+                <a class="contact-item" href="#">
+                    <span class="icon">📷</span>
+                    <span>小红书 / 抖音<br><span class="hint">@小明健身日记 · 每日打卡</span></span>
+                </a>
+                <div style="padding:12px 16px;border-radius:14px;background:var(--accent-light);font-size:14px;color:var(--text-secondary);">
+                    🎯 坐标：韩国 · 水源 &nbsp;|&nbsp; 健身房名称：亚洲大学校WHITE GYM
+                </div>
+            </div>
+            <div class="qr-area">
+                <div class="qr-box">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="100" fill="#fff" rx="4"/>
+                        <rect x="8" y="8" width="22" height="22" fill="#3a3632" rx="3"/>
+                        <rect x="12" y="12" width="14" height="14" fill="#fff" rx="2"/>
+                        <rect x="15" y="15" width="8" height="8" fill="#3a3632" rx="1"/>
+                        <rect x="70" y="8" width="22" height="22" fill="#3a3632" rx="3"/>
+                        <rect x="74" y="12" width="14" height="14" fill="#fff" rx="2"/>
+                        <rect x="77" y="15" width="8" height="8" fill="#3a3632" rx="1"/>
+                        <rect x="8" y="70" width="22" height="22" fill="#3a3632" rx="3"/>
+                        <rect x="12" y="74" width="14" height="14" fill="#fff" rx="2"/>
+                        <rect x="15" y="77" width="8" height="8" fill="#3a3632" rx="1"/>
+                        <rect x="34" y="8" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="48" y="8" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="58" y="8" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="42" y="18" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="8" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="18" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="28" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="46" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="56" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="66" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="80" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="90" y="34" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="8" y="44" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="34" y="44" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="44" y="44" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="58" y="44" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="70" y="44" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="80" y="44" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="18" y="54" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="28" y="54" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="38" y="54" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="48" y="54" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="64" y="54" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="80" y="54" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="90" y="54" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="8" y="64" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="18" y="64" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="34" y="64" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="44" y="64" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="58" y="64" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="80" y="64" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="90" y="64" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="60" y="74" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="70" y="74" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="28" y="80" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="40" y="80" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="50" y="80" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="60" y="80" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="80" y="80" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="90" y="80" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="18" y="90" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="30" y="90" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="52" y="90" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="62" y="90" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="80" y="90" width="6" height="6" fill="#3a3632" rx="1"/>
+                        <rect x="90" y="90" width="6" height="6" fill="#3a3632" rx="1"/>
+                    </svg>
+                </div>
+                <div class="qr-label">📸 扫码加微信 · 一起练</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        🏋️ 训练计划仅供参考 &nbsp;·&nbsp; 根据自身情况调整重量与强度<br>
+        Made with 💪 &nbsp;·&nbsp; 坚持就是胜利
+    </div>
+
+</div>
+
+</body>
+</html>
